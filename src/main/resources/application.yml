@@ -1,17 +1,14 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:backs
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  jpa:
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+    url: jdbc:postgresql://localhost:5439/backoffice_database
+    username: backoffice
+    password: backoffice123
+    driver-class-name: org.postgresql.Driver
+    ddl-auto: update
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 10
+      connection-timeout: 30000
 
 application:
   security:

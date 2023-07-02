@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_token")
+@Table(name = "tb_tokens")
 public class TokenEntity {
 
     @Id

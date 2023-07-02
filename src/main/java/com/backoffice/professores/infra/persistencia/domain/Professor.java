@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_professors")
+@Table(name = "tb_professores")
 public class Professor implements UserDetails {
 
     @Id
@@ -28,6 +28,7 @@ public class Professor implements UserDetails {
     private String senha;
     private String nome;
 
+    @Enumerated(EnumType.ORDINAL)
     private StatusProfessor status;
 
     @Enumerated(EnumType.STRING)
