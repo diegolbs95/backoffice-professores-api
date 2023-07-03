@@ -2,16 +2,13 @@ package com.backoffice.professores.infra.persistencia.domain;
 
 import com.backoffice.professores.infra.persistencia.enums.TokenType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
 @Builder
+@Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Table(name = "tb_tokens")
 public class TokenEntity {
 
@@ -25,8 +22,9 @@ public class TokenEntity {
     @Enumerated(EnumType.STRING)
     private TokenType tokenType = TokenType.BEARER;
 
+    @Setter
     private boolean revoked;
-
+    @Setter
     private boolean expired;
 
     @ManyToOne(fetch = FetchType.LAZY)

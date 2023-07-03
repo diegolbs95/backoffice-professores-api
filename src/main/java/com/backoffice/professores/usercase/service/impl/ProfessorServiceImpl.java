@@ -35,9 +35,6 @@ public class ProfessorServiceImpl implements ProfessorService {
         var professorSalvo = professorRepository.save(professor);
         log.info("Professor salvo com sucesso na base de dados.");
 
-        var jwtToken = jwtService.generateToken(professor);
-        salvarTokenProfessor(professorSalvo, jwtToken);
-
         return ProfessorFactory.convertProfessorDTO(professorSalvo);
     }
 

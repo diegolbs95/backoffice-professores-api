@@ -10,11 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Data
 @Builder
+@Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Table(name = "tb_professores")
 public class Professor implements UserDetails {
 
@@ -25,9 +25,12 @@ public class Professor implements UserDetails {
 
     @Column(unique = true)
     private String email;
+
+    @Setter
     private String senha;
     private String nome;
 
+    @Setter
     @Enumerated(EnumType.ORDINAL)
     private StatusProfessor status;
 

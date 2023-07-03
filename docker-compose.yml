@@ -13,7 +13,7 @@ services:
     ports:
       - 5439:5432
 
-  db_backend:
+  backend_backoffice:
     build:
       dockerfile: ./Dockerfile
     ports:

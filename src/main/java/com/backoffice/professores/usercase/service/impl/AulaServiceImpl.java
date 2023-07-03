@@ -55,7 +55,6 @@ public class AulaServiceImpl implements AulaService {
         if (professor != null) {
             for (Aula aula : professor.getAulas()) {
                 if (aula.getId().equals(idAula)){
-
                     BeanUtils.copyProperties(AulaFactory.aulaConvert(aulaDTO), aula, "id", "professor");
                     log.info(String.format("Auteracao de aula com id: %s, para professor: %s!", idAula,
                             professor.getEmail()));

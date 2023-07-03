@@ -1,5 +1,6 @@
 package com.backoffice.professores.infra.config.security;
 
+import com.backoffice.professores.infra.persistencia.domain.Professor;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -34,32 +35,34 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(Professor professor) {
+        return generateToken(new HashMap<>(), professor);
     }
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails
+            Professor professor
     ) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
+        return buildToken(extraClaims, professor, jwtExpiration);
     }
 
     public String generateRefreshToken(
-            UserDetails userDetails
+            Professor professor
     ) {
-        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+        return buildToken(new HashMap<>(), professor, refreshExpiration);
     }
 
     private String buildToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails,
+            Professor professor,
             long expiration
     ) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
+                .setSubject(professor.getUsername())
+                .claim("nome", professor.getNome())
+                .claim("id", professor.getId())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
