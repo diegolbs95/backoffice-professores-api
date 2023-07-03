@@ -4,6 +4,7 @@ import com.backoffice.professores.infra.controller.AulaController;
 import com.backoffice.professores.usercase.dto.AulaDTO;
 import com.backoffice.professores.usercase.service.AulaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class AulaControllerImpl implements AulaController {
     @PostMapping("/registro")
     @PreAuthorize("hasAnyAuthority('backoffice:create', 'professor:create')")
     public ResponseEntity<AulaDTO> registro(@RequestHeader("Authorization") String token, @RequestBody AulaDTO aulaDTO) {
-        return ResponseEntity.ok(service.registro(token, aulaDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.registro(token, aulaDTO));
     }
 
     @Override
