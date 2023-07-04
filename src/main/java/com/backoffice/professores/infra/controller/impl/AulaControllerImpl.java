@@ -33,7 +33,7 @@ public class AulaControllerImpl implements AulaController {
 
     @Override
     @PutMapping("/atualizar/{id}")
-    public void atualizar(@RequestHeader("Authorization") String token, @PathVariable Long id,@RequestBody AulaDTO aulaDTO) {
+    public void atualizar(@RequestHeader("Authorization") String token, @PathVariable String id,@RequestBody AulaDTO aulaDTO) {
         service.atualizar(token, id, aulaDTO);
     }
 }

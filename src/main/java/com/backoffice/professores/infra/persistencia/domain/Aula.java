@@ -1,22 +1,22 @@
 package com.backoffice.professores.infra.persistencia.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
 @Builder
-@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tb_aulas")
+@Document(collection = "tb_aulas")
 public class Aula {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Setter
     private String titulo;
@@ -25,8 +25,7 @@ public class Aula {
     @Setter
     private LocalDate dataPrevistaAula;
 
-    @ManyToOne
-    @JsonIgnore
+    @DBRef
     @Setter
     private Professor professor;
 }

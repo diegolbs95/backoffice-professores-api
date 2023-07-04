@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void revokeAllProfessorTokens(Professor professor) {
-        var listTokens = tokenRepository.findAllValidTokenByProfessor(professor.getId());
+        var listTokens = tokenRepository.findAllByProfessorIdAndExpiredIsFalseAndRevokedIsFalse(professor.getId());
         if (listTokens.isEmpty())
             return;
         listTokens.forEach(token -> {

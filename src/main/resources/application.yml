@@ -1,14 +1,13 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5439/backoffice_database
-    username: backoffice
-    password: backoffice123
-    driver-class-name: org.postgresql.Driver
-    ddl-auto: update
-    hikari:
-      minimum-idle: 1
-      maximum-pool-size: 10
-      connection-timeout: 30000
+  data:
+    mongodb:
+      host: db_backoffice_professor
+      port: 27017
+      database: backoffice_database
+      username: backoffice
+      password: backoffice123
+      uri: mongodb://backoffice:backoffice123@db_backoffice_professor:27017/backoffice_database
+
 
 application:
   security:
@@ -17,3 +16,4 @@ application:
       expiration: 86400000 # a day
       refresh-token:
         expiration: 604800000 # 7 days
+

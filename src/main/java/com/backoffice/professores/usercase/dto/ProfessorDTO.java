@@ -9,7 +9,7 @@ import lombok.Getter;
 @Builder
 public class ProfessorDTO {
 
-    private Long id;
+    private String id;
     private String email;
     private String senha;
     private String nome;

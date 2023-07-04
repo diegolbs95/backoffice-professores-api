@@ -1,7 +1,6 @@
 package com.backoffice.professores.usercase.service.impl;
 
 import com.backoffice.professores.infra.factory.AulaFactory;
-import com.backoffice.professores.infra.persistencia.domain.Aula;
 import com.backoffice.professores.infra.persistencia.repository.AulaRepository;
 import com.backoffice.professores.usercase.dto.AulaDTO;
 import com.backoffice.professores.usercase.service.AulaService;
@@ -9,6 +8,7 @@ import com.backoffice.professores.usercase.service.ProfessorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,24 +43,23 @@ public class AulaServiceImpl implements AulaService {
         var professor = professorService.buscarProfessorNoToken(token);
 
         var listAulaDTO = new ArrayList<AulaDTO>();
-        professor.getAulas().forEach(aula -> listAulaDTO.add(AulaFactory.aulaDTOConvert(aula)));
+        var listAulas = aulaRepository.findAllByProfessorId(professor.getId());
+        listAulas.forEach(aula -> listAulaDTO.add(AulaFactory.aulaDTOConvert(aula)));
 
         return listAulaDTO;
     }
 
     @Override
-    public void atualizar(String emailProfessor, Long idAula, AulaDTO aulaDTO) {
+    public void atualizar(String emailProfessor, String idAula, AulaDTO aulaDTO) {
         var professor = professorService.buscarProfessorNoToken(emailProfessor);
+        var aula = aulaRepository.findById(idAula).orElseThrow(() ->
+                        new UsernameNotFoundException("Aula não encontrada."));
 
-        if (professor != null) {
-            for (Aula aula : professor.getAulas()) {
-                if (aula.getId().equals(idAula)){
-                    BeanUtils.copyProperties(AulaFactory.aulaConvert(aulaDTO), aula, "id", "professor");
-                    log.info(String.format("Auteracao de aula com id: %s, para professor: %s!", idAula,
-                            professor.getEmail()));
-                    aulaRepository.save(aula);
-                }
-            }
+        if (aula.getProfessor().getId().equals(professor.getId())){
+            BeanUtils.copyProperties(AulaFactory.aulaConvert(aulaDTO), aula, "id", "professor");
+            log.info(String.format("Auteracao de aula com id: %s, para professor: %s!", idAula,
+                    professor.getNome()));
+            aulaRepository.save(aula);
         }
     }
 }

@@ -1,25 +1,28 @@
 package com.backoffice.professores.infra.persistencia.domain;
 
 import com.backoffice.professores.infra.persistencia.enums.TokenType;
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 @Builder
-@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tb_tokens")
+@Document(collection = "tb_tokens")
 public class TokenEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(unique = true)
+    @Indexed(unique = true)
     private String token;
 
-    @Enumerated(EnumType.STRING)
+    @Field(targetType = FieldType.STRING)
     private TokenType tokenType = TokenType.BEARER;
 
     @Setter
@@ -27,6 +30,10 @@ public class TokenEntity {
     @Setter
     private boolean expired;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @DBRef
     private Professor professor;
+
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
+    }
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 public class AulaDTO {
 
     @Setter
-    private Long id;
+    private String id;
     private String titulo;
     private String descricao;
     private String dataPrevistaAula;

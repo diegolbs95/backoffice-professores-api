@@ -2,27 +2,29 @@ version: '3'
 
 services:
   db_backoffice_professor:
-    image: postgres
+    image: mongo
     restart: always
     volumes:
-      - ./script.sql:/docker-entrypoint-initdb.d/script.sql
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
     environment:
-      - POSTGRES_DB=backoffice_database
-      - POSTGRES_USER=backoffice
-      - POSTGRES_PASSWORD=backoffice123
+      - MONGO_INITDB_DATABASE=backoffice_database
+      - MONGO_INITDB_ROOT_USERNAME=backoffice
+      - MONGO_INITDB_ROOT_PASSWORD=backoffice123
     ports:
-      - 5439:5432
+      - 27017:27017
 
-  backend_backoffice:
+  backend_backoffce:
     build:
       dockerfile: ./Dockerfile
     ports:
       - 8080:8080
     environment:
       - ALLOW_ORIGIN=http://localhost:8080
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_backoffice_professor:5432/backoffice_database
-      - SPRING_DATASOURCE_USERNAME=backoffice
-      - SPRING_DATASOURCE_PASSWORD=backoffice123
+      - SPRING_DATA_MONGODB_HOST=db_backoffice_professor
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_DATABASE=backoffice_database
+      - SPRING_DATA_MONGODB_USERNAME=backoffice
+      - SPRING_DATA_MONGODB_PASSWORD=backoffice123
 
 networks:
   wordpress_net:

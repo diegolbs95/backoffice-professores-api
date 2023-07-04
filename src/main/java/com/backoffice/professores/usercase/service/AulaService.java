@@ -10,5 +10,5 @@ public interface AulaService {
 
     List<AulaDTO> listar(String professorToken);
 
-    void atualizar(String emailProfessor, Long idAula, AulaDTO aulaDTO);
+    void atualizar(String emailProfessor, String idAula, AulaDTO aulaDTO);
 }
