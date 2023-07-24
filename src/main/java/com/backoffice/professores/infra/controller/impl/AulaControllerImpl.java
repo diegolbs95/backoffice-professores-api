@@ -5,7 +5,6 @@ import com.backoffice.professores.usercase.dto.AulaDTO;
 import com.backoffice.professores.usercase.service.AulaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,14 +18,15 @@ public class AulaControllerImpl implements AulaController {
 
     @Override
     @PostMapping("/registro")
-    public ResponseEntity<AulaDTO> registro(@RequestHeader("Authorization") String token, @RequestBody AulaDTO aulaDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.registro(token, aulaDTO));
+    @ResponseStatus(HttpStatus.CREATED)
+    public AulaDTO registro(@RequestHeader("Authorization") String token, @RequestBody AulaDTO aulaDTO) {
+        return service.registro(token, aulaDTO);
     }
 
     @Override
     @GetMapping("/listar")
-    public ResponseEntity<List<AulaDTO>> listar(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(service.listar(token));
+    public List<AulaDTO> listar(@RequestHeader("Authorization") String token) {
+        return service.listar(token);
     }
 
     @Override

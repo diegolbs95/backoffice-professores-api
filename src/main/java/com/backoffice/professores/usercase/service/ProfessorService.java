@@ -8,5 +8,6 @@ public interface ProfessorService {
     ProfessorDTO registro(ProfessorDTO professorDTO);
 
     Professor buscarProfessorNoToken(String token);
-    public void salvarTokenProfessor(Professor professor, String jwtToken);
+    void salvarTokenProfessor(Professor professor, String jwtToken);
+
 }

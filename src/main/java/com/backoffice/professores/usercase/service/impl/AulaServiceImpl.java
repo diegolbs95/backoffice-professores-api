@@ -1,5 +1,6 @@
 package com.backoffice.professores.usercase.service.impl;
 
+import com.backoffice.professores.infra.exception.UserNotFoundException;
 import com.backoffice.professores.infra.factory.AulaFactory;
 import com.backoffice.professores.infra.persistencia.repository.AulaRepository;
 import com.backoffice.professores.usercase.dto.AulaDTO;
@@ -8,7 +9,6 @@ import com.backoffice.professores.usercase.service.ProfessorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class AulaServiceImpl implements AulaService {
     public void atualizar(String emailProfessor, String idAula, AulaDTO aulaDTO) {
         var professor = professorService.buscarProfessorNoToken(emailProfessor);
         var aula = aulaRepository.findById(idAula).orElseThrow(() ->
-                        new UsernameNotFoundException("Aula não encontrada."));
+                        new UserNotFoundException("Aula não cadastrada na base de dados."));
 
         if (aula.getProfessor().getId().equals(professor.getId())){
             BeanUtils.copyProperties(AulaFactory.aulaConvert(aulaDTO), aula, "id", "professor");

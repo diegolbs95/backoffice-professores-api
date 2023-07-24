@@ -1,6 +1,8 @@
 package com.backoffice.professores.usercase.service.impl;
 
 import com.backoffice.professores.infra.config.security.JwtService;
+import com.backoffice.professores.infra.exception.UserNotFoundException;
+import com.backoffice.professores.infra.exception.UserUnauthorizedException;
 import com.backoffice.professores.infra.persistencia.domain.Professor;
 import com.backoffice.professores.infra.persistencia.repository.ProfessorRepository;
 import com.backoffice.professores.infra.persistencia.repository.TokenRepository;
@@ -11,8 +13,8 @@ import com.backoffice.professores.usercase.service.ProfessorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import static com.backoffice.professores.infra.persistencia.enums.StatusProfessor.AGUARDANDO_APROVACAO;
@@ -30,26 +32,34 @@ public class AuthServiceImpl implements AuthService {
     private final TokenRepository tokenRepository;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
-        var professor = professorRepository.findByEmail(request.getEmail()).orElseThrow(()->
-                new UsernameNotFoundException("Professor não encontrado."));
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
-        if (professor.getStatus().equals(AGUARDANDO_APROVACAO) || professor.getStatus().equals(PEDENTE)) {
-            log.info("Status cadastro professor Aguardando aprovacao ou pendente. Verifique com AdmBackoffice");
-            return null;
+            var professor = professorRepository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new UserNotFoundException("Professor não encontrado com o e-mail: "
+                            + request.getEmail()));
+
+            if (professor.getStatus().equals(AGUARDANDO_APROVACAO) || professor.getStatus().equals(PEDENTE)) {
+                log.info("Status cadastro professor Aguardando aprovacao ou pendente. Verifique com AdmBackoffice");
+                throw new UserUnauthorizedException("Login não autorizado, status do professor: " + professor.getStatus() +
+                        ". Entre em contato com Administrador Backoffice");
+            }
+
+            var jwtToken = jwtService.generateToken(professor);
+            var refreshToken = jwtService.generateRefreshToken(professor);
+            revokeAllProfessorTokens(professor);
+            professorService.salvarTokenProfessor(professor, jwtToken);
+
+            return AuthenticationResponse.builder()
+                    .accessToken(jwtToken)
+                    .refreshToken(refreshToken)
+                    .build();
+
+        } catch (BadCredentialsException e) {
+            throw new UserNotFoundException("Professor não cadastrado, verifique suas credencias ou faça um cadastro.");
         }
-
-        var jwtToken = jwtService.generateToken(professor);
-        var refreshToken = jwtService.generateRefreshToken(professor);
-        revokeAllProfessorTokens(professor);
-        professorService.salvarTokenProfessor(professor, jwtToken);
-
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
     }
 
     @Override

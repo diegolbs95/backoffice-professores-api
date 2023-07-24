@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,7 +38,6 @@ class AuthControllerImplTest {
 
         var result = authController.authenticate(request);
 
-        assertEquals(response, result.getBody());
-        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(response, result);
     }
 }

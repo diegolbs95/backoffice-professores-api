@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -33,7 +32,6 @@ class ProfessorControllerImplTest {
 
         var result = professorController.registro(professorDTO);
 
-        assertEquals(HttpStatus.CREATED, result.getStatusCode());
-        assertEquals(professorDTO, result.getBody());
+        assertEquals(professorDTO, result);
     }
 }

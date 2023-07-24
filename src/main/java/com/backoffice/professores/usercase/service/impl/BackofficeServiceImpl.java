@@ -1,5 +1,6 @@
 package com.backoffice.professores.usercase.service.impl;
 
+import com.backoffice.professores.infra.exception.UserNotFoundException;
 import com.backoffice.professores.infra.persistencia.enums.Role;
 import com.backoffice.professores.infra.persistencia.enums.StatusProfessor;
 import com.backoffice.professores.infra.persistencia.repository.ProfessorRepository;
@@ -7,7 +8,6 @@ import com.backoffice.professores.usercase.service.BackofficeService;
 import com.backoffice.professores.usercase.service.ProfessorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -29,7 +29,7 @@ public class BackofficeServiceImpl implements BackofficeService {
 
         log.info("Admin altorizado aprovar cadastro.");
         var professor = professorRepository.findByEmail(emailProfessor).orElseThrow(() ->
-                new UsernameNotFoundException("Professor não encontrado."));
+                new UserNotFoundException("Professor com email solicitado não existe cadastro."));
         professor.setStatus(StatusProfessor.APROVADO);
         professorRepository.save(professor);
 

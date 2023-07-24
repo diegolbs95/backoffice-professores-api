@@ -1,13 +1,10 @@
 spring:
   data:
     mongodb:
-      host: db_backoffice_professor
       port: 27017
       database: backoffice_database
       username: backoffice
       password: backoffice123
-      uri: mongodb://backoffice:backoffice123@db_backoffice_professor:27017/backoffice_database
-
 
 application:
   security:

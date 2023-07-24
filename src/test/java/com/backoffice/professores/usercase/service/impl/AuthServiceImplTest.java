@@ -1,6 +1,8 @@
 package com.backoffice.professores.usercase.service.impl;
 
 import com.backoffice.professores.infra.config.security.JwtService;
+import com.backoffice.professores.infra.exception.UserNotFoundException;
+import com.backoffice.professores.infra.exception.UserUnauthorizedException;
 import com.backoffice.professores.infra.persistencia.domain.Professor;
 import com.backoffice.professores.infra.persistencia.domain.TokenEntity;
 import com.backoffice.professores.infra.persistencia.repository.ProfessorRepository;
@@ -14,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -73,7 +74,7 @@ class AuthServiceImplTest {
     @Test
     void testAuthenticateProfessorNaoEncontrado() {
 
-        assertThrows(UsernameNotFoundException.class, () -> {
+        assertThrows(UserNotFoundException.class, () -> {
             authService.authenticate(authenticationRequest);
         });
         verify(professorService, never()).salvarTokenProfessor(any(), anyString());
@@ -85,7 +86,10 @@ class AuthServiceImplTest {
 
         when(professorRepository.findByEmail(anyString())).thenReturn(Optional.of(professor));
 
-        assertNull(authService.authenticate(authenticationRequest));
+        assertThrows(UserUnauthorizedException.class, () -> {
+            authService.authenticate(authenticationRequest);
+        });
+
         verify(professorService, never()).salvarTokenProfessor(any(), anyString());
     }
 

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -31,7 +30,6 @@ class BackofficeControllerImplTest {
 
         var result = backofficeController.aprovar(token, emailProfessor);
 
-        assertEquals(response, result.getBody());
-        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(response, result);
     }
 }

@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 
@@ -41,8 +40,7 @@ class AulaControllerImplTest {
 
         var result = aulaController.registro(token, aulaDTO);
 
-        assertEquals(aulaDTO, result.getBody());
-        assertEquals(HttpStatus.CREATED, result.getStatusCode());
+        assertEquals(aulaDTO, result);
     }
 
     @Test
@@ -50,9 +48,8 @@ class AulaControllerImplTest {
 
         when(service.listar(token)).thenReturn(new ArrayList<AulaDTO>());
 
-        var result = aulaController.listar(token);
-
-        assertEquals(HttpStatus.OK, result.getStatusCode());
+        aulaController.listar(token);
+        verify(service, times(1)).listar(anyString());
     }
 
     @Test

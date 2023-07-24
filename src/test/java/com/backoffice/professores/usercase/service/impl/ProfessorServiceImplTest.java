@@ -1,6 +1,7 @@
 package com.backoffice.professores.usercase.service.impl;
 
 import com.backoffice.professores.infra.config.security.JwtService;
+import com.backoffice.professores.infra.exception.UserNotFoundException;
 import com.backoffice.professores.infra.persistencia.domain.Professor;
 import com.backoffice.professores.infra.persistencia.repository.ProfessorRepository;
 import com.backoffice.professores.infra.persistencia.repository.TokenRepository;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -69,7 +69,7 @@ class ProfessorServiceImplTest {
 
         when(jwtService.extractUsername(anyString())).thenReturn("test@backoffice.com");
 
-        assertThrows(UsernameNotFoundException.class, () -> {
+        assertThrows(UserNotFoundException.class, () -> {
             professorService.buscarProfessorNoToken(token);
         });
     }

@@ -1,5 +1,6 @@
 package com.backoffice.professores.usercase.service.impl;
 
+import com.backoffice.professores.infra.exception.UserNotFoundException;
 import com.backoffice.professores.infra.persistencia.domain.Aula;
 import com.backoffice.professores.infra.persistencia.domain.Professor;
 import com.backoffice.professores.infra.persistencia.enums.StatusProfessor;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -73,6 +73,20 @@ class AulaServiceImplTest {
     }
 
     @Test
+    void testRegistroAulaProfessorNaoExistente() {
+
+        when(professorService.buscarProfessorNoToken(anyString()))
+                .thenThrow(new UserNotFoundException("Professor não encontrado"));
+
+        try {
+            aulaService.registro("testTokenProfessor", aulaDTO);
+        }catch (UserNotFoundException e) {
+            assertEquals("Professor não encontrado", e.getMessage());
+            verify(aulaRepository, never()).save(any());
+        }
+    }
+
+    @Test
     void testListarAulas() {
         var listAulas = new ArrayList<Aula>();
         listAulas.add(aula);
@@ -98,7 +112,7 @@ class AulaServiceImplTest {
     void testAtualizarAulaNaoEncontrada() {
         when(professorService.buscarProfessorNoToken(anyString())).thenReturn(professor);
 
-        assertThrows(UsernameNotFoundException.class, () -> {
+        assertThrows(UserNotFoundException.class, () -> {
             aulaService.atualizar("test@backoffice.com", "1", aulaDTO);
         });
         verify(aulaRepository, never()).save(any());

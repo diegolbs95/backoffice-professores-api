@@ -2,6 +2,7 @@ package com.backoffice.professores.usercase.service.impl;
 
 
 import com.backoffice.professores.infra.config.security.JwtService;
+import com.backoffice.professores.infra.exception.UserNotFoundException;
 import com.backoffice.professores.infra.factory.ProfessorFactory;
 import com.backoffice.professores.infra.persistencia.domain.Professor;
 import com.backoffice.professores.infra.persistencia.domain.TokenEntity;
@@ -12,7 +13,6 @@ import com.backoffice.professores.usercase.dto.ProfessorDTO;
 import com.backoffice.professores.usercase.service.ProfessorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +44,8 @@ public class ProfessorServiceImpl implements ProfessorService {
             var jwtToken = token.substring(7);
             var emailProfessor = jwtService.extractUsername(jwtToken);
             return professorRepository.findByEmail(emailProfessor)
-                    .orElseThrow(() -> new UsernameNotFoundException("Professor não encontrado."));
+                    .orElseThrow(() -> new UserNotFoundException("Não existe professor cadastrado com email: "
+                            + emailProfessor));
         }
         return null;
     }
